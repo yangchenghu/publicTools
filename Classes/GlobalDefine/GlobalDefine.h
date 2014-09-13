@@ -1,9 +1,9 @@
 //
 //  GlobalDefine.h
-//  SinaToken
+//
 //
 //  Created by yang chenghu on 13-5-9.
-//  Copyright (c) 2013年 Sina. All rights reserved.
+//  Copyright (c) 2013年  All rights reserved.
 //
 
 
