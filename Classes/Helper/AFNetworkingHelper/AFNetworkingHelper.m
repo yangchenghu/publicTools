@@ -10,8 +10,9 @@
 
 #import "Reachability.h"
 #import "UIImageView+AFNetworking.h"
-#import "Common+Cookies.h"
+#import "CookiesHelper.h"
 
+#import "AFNetworkActivityIndicatorManager.h"
 
 #define kLinkTag @"lt"
 
@@ -29,7 +30,7 @@
     
     BOOL bNetStatus = YES;
     
-    if ( kNotReachable == netStatus )
+    if ( NotReachable == netStatus )
     {
         bNetStatus = NO;
     }
@@ -37,40 +38,7 @@
     return bNetStatus;
 }
 
-+ (NSString *)getNetType
-{
-    Reachability * netStyle = [Reachability reachabilityForInternetConnection];
-    [netStyle startNotifier];
-    NetworkStatus netStatus = [netStyle currentReachabilityStatus];
-    [netStyle stopNotifier];
-    
-    NSString * strNetType = nil;
-    
-    if ( kReachableViaWWAN == netStatus )
-    {
-        strNetType = @"2/3G";
-    }
-    else if(kReachableViaWiFi == netStatus)
-    {
-        strNetType = @"wifi";
-    }
-    else if(kNotReachable == netStatus)
-    {
-        strNetType = @"no net";
-    }
-    else if (kReachableVia2G == netStatus)
-    {
-        strNetType = @"2G";
-    }
-    else if (kReachableVia3G == netStatus)
-    {
-        strNetType = @"3G";
-    }
-    
-    return strNetType;
-}
-
-+ (NetBase *)sharedInstance
++ (instancetype)sharedInstance
 {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
@@ -118,7 +86,7 @@
         return;
     }
     
-    AFImageRequestOperation *requestOperation = [[AFImageRequestOperation alloc] initWithRequest:urlRequest];
+    AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:urlRequest];
     [requestOperation setCompletionBlockWithSuccess:success failure:fail];
     
     [_netOperationQueue addOperation:requestOperation];
@@ -127,14 +95,30 @@
 #pragma mark - Net Methods
 - (NSUInteger)postData:(NSDictionary *)dicParamenters toRootURL:(NSString *)strRoot toPath:(NSString *)strPath cookies:(NSArray *)arrCookies userAgent:(NSString *)strUserAgent userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail
 {
-    NSURL *url = [NSURL URLWithString:strRoot];
-    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+    NSString * strUrl = [strRoot stringByAppendingString:strPath];
+
+    return [self postData:dicParamenters toURL:strUrl cookies:arrCookies userAgent:strUserAgent userInfo:dicUserInfo successBlock:success failBlock:fail];
+}
+
+- (NSUInteger)postData:(NSDictionary *)dicParamenters toURL:(NSString *)strUrl cookies:(NSArray *)arrCookies userAgent:(NSString *)strUserAgent userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail
+{
+    NSUInteger iconnectHash = [strUrl hash];
+    
+#ifdef kAFWVersion20
+    
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:nil error:nil];
+    
+#else
+    
+    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:strUrl];
     
     NSMutableURLRequest *request = [httpClient requestWithMethod:@"POST" path:strPath parameters:dicParamenters];
     
+#endif
+    
     if (arrCookies)
     {
-        [Common addCookies:arrCookies];
+        [CookiesHelper addCookies:arrCookies];
     }
     
     if (strUserAgent)
@@ -143,10 +127,6 @@
     }
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    
-    NSString * strUrl = [strRoot stringByAppendingString:strPath];
-    
-    NSUInteger iconnectHash = [strUrl hash];
     
     if (dicUserInfo)
     {
@@ -179,16 +159,26 @@
 - (NSUInteger)getRootURL:(NSString *)strRoot toPath:(NSString *)strPath userInfo:(NSDictionary *)dicUserInfo
       successBlock:(successBlock)success failBlock:(failBlock)fail
 {
+    NSString * strUrl = [strRoot stringByAppendingString:strPath];
+    return [self getURL:strUrl userInfo:dicUserInfo successBlock:success failBlock:fail];
+}
+
+- (NSUInteger)getURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo
+            successBlock:(successBlock)success failBlock:(failBlock)fail
+{
+    NSUInteger iconnectHash = [strUrl hash];
+    
+#ifdef kAFWVersion20
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:nil error:nil];
+#else
+    
     NSURL *url = [NSURL URLWithString:strRoot];
     AFHTTPClient *httpClient = [AFHTTPClient clientWithBaseURL:url];
     
     NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:strPath parameters:nil];
+#endif
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    
-    NSString * strUrl = [strRoot stringByAppendingString:strPath];
-
-    NSUInteger iconnectHash = [strUrl hash];
     
     if (dicUserInfo)
     {
@@ -207,6 +197,7 @@
     
     return iconnectHash;
 }
+
 
 //同步
 - (void)synCallURL:(NSString *)urlString

@@ -13,6 +13,8 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 
+#define kAFWVersion20 1
+
 typedef void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject);
 typedef void (^failBlock)(AFHTTPRequestOperation *operation, NSError *error);
 
@@ -33,13 +35,6 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
  * @return YES - 有网络连接 NO - 无网络连接
  */
 + (BOOL)isNetworkReachable;
-
-/**
- * @description 查看网络类型
- * @param
- * @return
- */
-+ (NSString *)getNetType;
 
 /**
  * @description 获取NetBase类单例
@@ -63,15 +58,27 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
 - (void)getImageFromURL:(NSString *)strURL successBlock:(successBlock)success failBlock:(failBlock)fail;
 
 /**
- * @description 
- * @param
+ * @description 通过POST的方法form
+ * @param strRoot 接受请求的域名
+ * @param strPath 接受请求的路径
+ * @param arrCookies cookies
+ * @param strUserAgent UserAgent
+ * @param dicUserInfo UserInfo
+ * @param success 发送成功后的回调block
+ * @param fail 发送失败的回调block
  * @return
  */
 - (NSUInteger)postData:(NSDictionary *)dicParamenters toRootURL:(NSString *)strRoot toPath:(NSString *)strPath cookies:(NSArray *)arrCookies userAgent:(NSString *)strUserAgent userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail;
 
 /**
- * @description 
- * @param
+ * @description 通过POST的方法form
+ * @param strRoot 接受请求的域名
+ * @param strPath 接受请求的路径
+ * @param arrCookies cookies
+ * @param strUserAgent UserAgent
+ * @param dicUserInfo UserInfo
+ * @param success 发送成功后的回调block
+ * @param fail 发送失败的回调block
  * @return
  */
 - (NSUInteger)postData:(NSDictionary *)dicParamenters toRootURL:(NSString *)strRoot toPath:(NSString *)strPath cookies:(NSArray *)dicCookies userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail;
@@ -89,6 +96,18 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
 - (NSUInteger)postData:(NSDictionary *)dicParamenters toRootURL:(NSString *)strRoot toPath:(NSString *)strPath userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail;
 
 /**
+ * @description 通过POST的方法form
+ * @param strUrl 接受请求的域名
+ * @param arrCookies cookies
+ * @param strUserAgent UserAgent
+ * @param dicUserInfo UserInfo
+ * @param success 发送成功后的回调block
+ * @param fail 发送失败的回调block
+ * @return
+ */
+- (NSUInteger)postData:(NSDictionary *)dicParamenters toURL:(NSString *)strUrl cookies:(NSArray *)arrCookies userAgent:(NSString *)strUserAgent userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail;
+
+/**
  * @description 通过GET的方法请求数据
  * @param strRoot 接受请求的域名
  * @param strPath 接受请求的路径
@@ -99,6 +118,17 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
  */
 - (NSUInteger)getRootURL:(NSString *)strRoot toPath:(NSString *)strPath userInfo:(NSDictionary *)dicUserInfo
       successBlock:(successBlock)success failBlock:(failBlock)fail;
+
+/**
+ * @description 通过GET的方法请求数据
+ * @param strUrl 接受请求的URL
+ * @param dicUserInfo 连接的UserInfo
+ * @param success 发送成功后的回调block
+ * @param fail 发送失败的回调block
+ * @return
+ */
+- (NSUInteger)getURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo
+        successBlock:(successBlock)success failBlock:(failBlock)fail;
 
 /**
  * @description 同步访问URL
