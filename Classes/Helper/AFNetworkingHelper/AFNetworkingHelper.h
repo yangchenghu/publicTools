@@ -12,9 +12,6 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-
-#define kAFWVersion20 1
-
 typedef void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject);
 typedef void (^failBlock)(AFHTTPRequestOperation *operation, NSError *error);
 
