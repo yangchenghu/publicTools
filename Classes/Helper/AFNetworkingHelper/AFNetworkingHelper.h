@@ -46,7 +46,7 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
  * @param
  * @return
  */
-+ (NetBase *)sharedInstance;
++ (instancetype)sharedInstance;
 
 /**
  * @description imageView获取图片
