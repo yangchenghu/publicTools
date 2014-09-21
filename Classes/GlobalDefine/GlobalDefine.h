@@ -11,11 +11,6 @@
 //__IPHONE_OS_VERSION_MIN_REQUIRED
 //最小支持的系统版本号
 
-//#import "iConsole.h"
-
-
-
-
 //use ARC
 //#if ! __has_feature(objc_arc)
 //#error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -25,6 +20,27 @@
 //#if __has_feature(objc_arc)
 //#error This file must be compiled with none-ARC. Use -fno-objc-arc flag.
 //#endif
+
+//64位处理器
+//#if __LP64__
+//#else
+//#endif
+
+
+#if TARGET_OS_IPHONE
+//iPhone Device
+#endif
+#if TARGET_IPHONE_SIMULATOR
+//iPhone Simulator
+#endif
+
+
+//ARC
+#if __has_feature(objc_arc)
+//compiling with ARC
+#else
+// compiling without ARC
+#endif
 
 
 
@@ -117,21 +133,21 @@
 #define kBool2String(x) ( x ? @"YES" : @"NO" )
 
 
-
 //color
 #define kColorSameRGB(x) kColorRGB(x, x, x)
 #define kColorRGB(R, G, B) [UIColor colorWithRed:(R / 255.0f) green:(G / 255.0f) blue:(B / 255.0f) alpha:1.0f]
 #define kColorRGBA(R, G, B, A) [UIColor colorWithRed:(R / 255.0f) green:(G / 255.0f) blue:(B / 255.0f) alpha:A]
 
+//rgb颜色转换（16进制->10进制）
+#define kUIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 
 //iOS Device info
-
 #define isRetina ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
 
 #define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 
 #define isPad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-
 
 
 
@@ -166,6 +182,7 @@ _Pragma("clang diagnostic pop") \
 #define kRadiansToAngle(x) ((x) * 180 / M_PI)
 #define kAngleToRadians(x) ((x) * M_PI / 180)
 
+
 #define kGetLeastIntBigerThanX(x)  ceil(x)
 #define kGetBigestIntLessThanX(x)  floor(x)
 
@@ -192,10 +209,7 @@ _Pragma("clang diagnostic pop") \
 
 
 
-
-
-//file PATH
-
+//File PATH
 #define DOCUMENTS_PATH [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES)objectAtIndex:0]
 
 #define CACHES_PATH    [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
@@ -205,46 +219,10 @@ _Pragma("clang diagnostic pop") \
 #define TEMP_PATH      NSTemporaryDirectory()
 
 
-
-
-
-
-
-#if TARGET_OS_IPHONE
-
-//iPhone Device
-
-#endif
-
-
-#if TARGET_IPHONE_SIMULATOR
-
-//iPhone Simulator
-
-#endif
-
-
-
-//ARC
-
-#if __has_feature(objc_arc)
-
-//compiling with ARC
-
-#else
-
-// compiling without ARC
-
-#endif
-
-
-
 //G－C－D
-
 #define BACK(block) dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
 
 #define MAIN(block) dispatch_async(dispatch_get_main_queue(),block)
-
 
 
 #define USER_DEFAULT [NSUserDefaults standardUserDefaults]
@@ -261,7 +239,6 @@ _Pragma("clang diagnostic pop") \
 
 
 //多语言
-
 #define SelfLocal(x, ...) NSLocalizedString(x, nil)
 
 
@@ -272,29 +249,9 @@ _Pragma("clang diagnostic pop") \
 #endif
 
 
-#pragma mark – common functions
+//#pragma mark – common functions
 
 #define RELEASE_SAFELY(__POINTER) { [__POINTER release]; __POINTER = nil; }
-
-
-//rgb颜色转换（16进制->10进制）
-#define kUIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-
-#pragma mark – color functions
-
-#define kRGBCOLOR(r, g, b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1.0f]
-
-#define kRGBACOLOR(r, g, b, a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:(a)]
-
-#pragma mark – degrees/radian functions
-
-#define degreesToRadian(x) (M_PI * (x) / 180.0)
-
-#define radianToDegrees(radian) (radian*180.0)/(M_PI)
-
-
-
-
 
 #define ITTDEBUG
 
@@ -304,10 +261,7 @@ _Pragma("clang diagnostic pop") \
 
 #define ITTLOGLEVEL_ERROR    1
 
-
-
 #ifndef ITTMAXLOGLEVEL
-
 
 #ifdef DEBUG
 
@@ -340,7 +294,6 @@ _Pragma("clang diagnostic pop") \
 // Prints the current method’s name.
 
 #define ITTDPRINTMETHODNAME() ITTDPRINT(@”%s”, __PRETTY_FUNCTION__)
-
 
 
 // Log-level based logging macros.
@@ -390,7 +343,6 @@ _Pragma("clang diagnostic pop") \
 #define ITTDCONDITIONLOG(condition, xx, ...) ((void)0)
 
 #endif
-
 
 
 #define ITTAssert(condition, ...)                                       \
