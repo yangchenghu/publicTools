@@ -109,10 +109,11 @@
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:nil error:nil];
     
 #else
+    NSURL * url = [NSURL URLWithString:strUrl];
     
-    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:strUrl];
+    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
     
-    NSMutableURLRequest *request = [httpClient requestWithMethod:@"POST" path:strPath parameters:dicParamenters];
+    NSMutableURLRequest *request = [httpClient requestWithMethod:@"POST" path:[url path] parameters:dicParamenters];
     
 #endif
     
@@ -172,10 +173,10 @@
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:nil error:nil];
 #else
     
-    NSURL *url = [NSURL URLWithString:strRoot];
+    NSURL *url = [NSURL URLWithString:strUrl];
     AFHTTPClient *httpClient = [AFHTTPClient clientWithBaseURL:url];
     
-    NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:strPath parameters:nil];
+    NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:[url path] parameters:nil];
 #endif
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
