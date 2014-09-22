@@ -164,6 +164,12 @@
     return [self getURL:strUrl userInfo:dicUserInfo successBlock:success failBlock:fail];
 }
 
+- (NSUInteger)postData:(NSDictionary *)dicParamenters toURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo  successBlock:(successBlock)success failBlock:(failBlock)fail
+{
+    return [self postData:dicParamenters toURL:strUrl cookies:nil userAgent:nil userInfo:dicUserInfo successBlock:success failBlock:fail];
+}
+
+
 - (NSUInteger)getURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo
             successBlock:(successBlock)success failBlock:(failBlock)fail
 {

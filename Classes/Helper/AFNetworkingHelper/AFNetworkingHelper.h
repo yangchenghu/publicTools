@@ -34,7 +34,7 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
 + (BOOL)isNetworkReachable;
 
 /**
- * @description 获取NetBase类单例
+ * @description 获取AFNetworkingHelper类单例
  * @param
  * @return
  */
@@ -103,6 +103,16 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
  * @return
  */
 - (NSUInteger)postData:(NSDictionary *)dicParamenters toURL:(NSString *)strUrl cookies:(NSArray *)arrCookies userAgent:(NSString *)strUserAgent userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail;
+
+/**
+ * @description 通过POST的方法form
+ * @param strUrl 接受请求的域名
+ * @param dicUserInfo UserInfo
+ * @param success 发送成功后的回调block
+ * @param fail 发送失败的回调block
+ * @return
+ */
+- (NSUInteger)postData:(NSDictionary *)dicParamenters toURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo  successBlock:(successBlock)success failBlock:(failBlock)fail;
 
 /**
  * @description 通过GET的方法请求数据
