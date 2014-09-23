@@ -1,0 +1,3 @@
+[submodule "Classes/Additions/NSString/GTMBase64"]
+	path = Classes/Additions/NSString/GTMBase64
+	url = git://github.com/yangchenghu/GTMBase64.git
