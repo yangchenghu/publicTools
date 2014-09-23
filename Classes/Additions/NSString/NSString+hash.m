@@ -59,7 +59,7 @@ NSString * sha1(const char *string)
 {
     const char *cStr = [self UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    CC_MD5( cStr, strlen(cStr), digest );
+    CC_MD5( cStr, (CC_LONG)strlen(cStr), digest );
     NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
     for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
     {
@@ -76,7 +76,7 @@ NSString * sha1(const char *string)
     
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];
     
-    CC_SHA1(data.bytes, data.length, digest);
+    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
     
     NSMutableString* result = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
     
@@ -95,7 +95,7 @@ NSString * sha1(const char *string)
     
     uint8_t digest[CC_SHA256_DIGEST_LENGTH];
     
-    CC_SHA256(data.bytes, data.length, digest);
+    CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
     
     NSMutableString* result = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
     
@@ -115,7 +115,7 @@ NSString * sha1(const char *string)
     
     uint8_t digest[CC_SHA384_DIGEST_LENGTH];
     
-    CC_SHA384(data.bytes, data.length, digest);
+    CC_SHA384(data.bytes, (CC_LONG)data.length, digest);
     
     NSMutableString* result = [NSMutableString stringWithCapacity:CC_SHA384_DIGEST_LENGTH * 2];
     
@@ -134,7 +134,7 @@ NSString * sha1(const char *string)
     NSData *data = [NSData dataWithBytes:cstr length:self.length];
     uint8_t digest[CC_SHA512_DIGEST_LENGTH];
     
-    CC_SHA512(data.bytes, data.length, digest);
+    CC_SHA512(data.bytes, (CC_LONG)data.length, digest);
     
     NSMutableString* result = [NSMutableString stringWithCapacity:CC_SHA512_DIGEST_LENGTH * 2];
     for(int i = 0; i < CC_SHA512_DIGEST_LENGTH; i++)
