@@ -7,6 +7,8 @@
 //
 
 
+#import "iConsole.h"
+
 
 //__IPHONE_OS_VERSION_MIN_REQUIRED
 //最小支持的系统版本号
@@ -85,7 +87,7 @@
 
 #ifdef DEBUG
 
-#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)//;[iConsole log:fmt, ##__VA_ARGS__]
+#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);[iConsole log:fmt, ##__VA_ARGS__]
 #define DELog(fmt, ...) fprintf(stderr,"%s:%d\t%s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])
 
 #define debug_pwd           printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__)
@@ -100,7 +102,7 @@
 
 #ifdef SHOW_DEBUG
 
-#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)//;[iConsole log:fmt, ##__VA_ARGS__]
+#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);[iConsole log:fmt, ##__VA_ARGS__]
 #define DELog(fmt, ...) nil
 
 #define debug_pwd           printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__)
