@@ -113,7 +113,12 @@
     
     AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
     
-    NSMutableURLRequest *request = [httpClient requestWithMethod:@"POST" path:[url path] parameters:dicParamenters];
+    NSString * strPath = [url path];
+    if (nil == [url query] &&  0 != [[url query] length]) {
+        strPath = [NSString stringWithFormat:@"%@?%@", strPath, [url query]];
+    }
+    
+    NSMutableURLRequest *request = [httpClient requestWithMethod:@"POST" path:strPath parameters:dicParamenters];
     
 #endif
     
@@ -182,7 +187,12 @@
     NSURL *url = [NSURL URLWithString:strUrl];
     AFHTTPClient *httpClient = [AFHTTPClient clientWithBaseURL:url];
     
-    NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:[url path] parameters:nil];
+    NSString * strPath = [url path];
+    if (nil == [url query] &&  0 != [[url query] length]) {
+        strPath = [NSString stringWithFormat:@"%@?%@", strPath, [url query]];
+    }
+    
+    NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:strPath parameters:nil];
 #endif
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
