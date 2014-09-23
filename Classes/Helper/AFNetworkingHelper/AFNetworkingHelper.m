@@ -114,7 +114,7 @@
     AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
     
     NSString * strPath = [url path];
-    if (nil == [url query] &&  0 != [[url query] length]) {
+    if (nil != [url query] &&  0 != [[url query] length]) {
         strPath = [NSString stringWithFormat:@"%@?%@", strPath, [url query]];
     }
     
@@ -188,7 +188,7 @@
     AFHTTPClient *httpClient = [AFHTTPClient clientWithBaseURL:url];
     
     NSString * strPath = [url path];
-    if (nil == [url query] &&  0 != [[url query] length]) {
+    if (nil != [url query] &&  0 != [[url query] length]) {
         strPath = [NSString stringWithFormat:@"%@?%@", strPath, [url query]];
     }
     
