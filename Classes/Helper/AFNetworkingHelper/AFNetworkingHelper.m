@@ -106,7 +106,7 @@
     
 #ifdef kAFWVersion20
     
-    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:nil error:nil];
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:dicParamenters error:nil];
     
 #else
     NSURL * url = [NSURL URLWithString:strUrl];
@@ -133,6 +133,17 @@
     }
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    [operation setWillSendRequestForAuthenticationChallengeBlock:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
+        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+        {
+            {
+                [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+            }
+        }
+        
+        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+    }];
     
     if (dicUserInfo)
     {
@@ -181,6 +192,8 @@
     NSUInteger iconnectHash = [strUrl hash];
     
 #ifdef kAFWVersion20
+    
+#warning -- need test
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:nil error:nil];
 #else
     
@@ -196,6 +209,18 @@
 #endif
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    [operation setWillSendRequestForAuthenticationChallengeBlock:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
+        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+        {
+            {
+                [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+            }
+        }
+        
+        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+    }];
+
     
     if (dicUserInfo)
     {

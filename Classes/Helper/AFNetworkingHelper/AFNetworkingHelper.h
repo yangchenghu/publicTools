@@ -23,6 +23,7 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
     NSOperationQueue * _netOperationQueue;
     
 }
+
 @property (nonatomic, strong) NSMutableData * receivedData;
 
 
