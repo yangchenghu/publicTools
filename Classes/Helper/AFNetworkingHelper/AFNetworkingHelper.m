@@ -194,7 +194,7 @@
 #ifdef kAFWVersion20
     
 #warning -- need test
-    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:nil error:nil];
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:strUrl parameters:nil error:nil];
 #else
     
     NSURL *url = [NSURL URLWithString:strUrl];
