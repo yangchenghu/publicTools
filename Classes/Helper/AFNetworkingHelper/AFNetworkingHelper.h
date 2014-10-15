@@ -25,7 +25,7 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
 }
 
 @property (nonatomic, strong) NSMutableData * receivedData;
-
+@property (nonatomic, strong) NSMutableDictionary * mDicHTTPRequestHeaders;
 
 /**
  * @description 监测网络连接状态

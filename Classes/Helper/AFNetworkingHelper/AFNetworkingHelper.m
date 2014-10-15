@@ -55,6 +55,8 @@
     {
         _netOperationQueue = [[NSOperationQueue alloc] init];
         _netOperationQueue.maxConcurrentOperationCount = 3;
+        
+        _mDicHTTPRequestHeaders = [NSMutableDictionary dictionary];
     }
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
@@ -132,6 +134,10 @@
         [request setValue:strUserAgent forHTTPHeaderField:@"User-Agent"];
     }
     
+    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
+        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
+    }
+    
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
     [operation setWillSendRequestForAuthenticationChallengeBlock:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
@@ -207,6 +213,10 @@
     
     NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:strPath parameters:nil];
 #endif
+    
+    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
+        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
+    }
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
