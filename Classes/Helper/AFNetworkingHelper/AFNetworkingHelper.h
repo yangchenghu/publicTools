@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AFNetworking.h"
-
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+
+#import "AFNetworking.h"
+
 
 typedef void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject);
 typedef void (^failBlock)(AFHTTPRequestOperation *operation, NSError *error);
