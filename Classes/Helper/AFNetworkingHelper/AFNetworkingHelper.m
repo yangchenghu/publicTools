@@ -64,6 +64,17 @@
     return self;
 }
 
+- (void)getImageFromURL:(NSString *)strURL
+              imageView:(UIImageView *)imageView
+       placeholderImage:(UIImage *)image
+                success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image))success
+                failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error))failure
+{
+    NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:strURL]];
+    
+    [imageView setImageWithURLRequest:request placeholderImage:image success:success failure:failure];
+}
+
 - (void)getImageFromURL:(NSString *)strURL imageView:(UIImageView *)imageView
 {
     [imageView setImageWithURL:[NSURL URLWithString:strURL]];
