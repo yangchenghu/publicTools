@@ -10,8 +10,6 @@
 
 @interface NSString (hash)
 
-
-
 /**
  * @description 16位的MD5加密方式
  * @param
@@ -54,18 +52,8 @@
  */
 - (NSString*)getSha512String;
 
-/**
- * @description base64加密
- * @param
- * @return
- */
-- (NSString*)encodeBase64;
 
-/**
- * @description base64解密
- * @param
- * @return
- */
-- (NSString*)decodeBase64;
+
+
 
 @end

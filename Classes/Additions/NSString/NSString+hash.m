@@ -8,13 +8,12 @@
 
 #import "NSString+hash.h"
 #import <CommonCrypto/CommonDigest.h>
-#import "GTMBase64.h"
+
 
 @implementation NSString (hash)
 
 NSString * shaSign(const char *string, const NSUInteger length);
 NSString * sha1(const char *string);
-
 
 static inline void hexString(unsigned char *from, char *to, NSUInteger length)
 {
@@ -144,21 +143,7 @@ NSString * sha1(const char *string)
     return result;
 }
 
-- (NSString*)encodeBase64
-{
-    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-    data = [GTMBase64 encodeData:data];
-    NSString *base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return base64String;
-}
 
-- (NSString*)decodeBase64
-{
-    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-    data = [GTMBase64 decodeData:data];
-    NSString *base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return base64String;
-}
 
 
 
