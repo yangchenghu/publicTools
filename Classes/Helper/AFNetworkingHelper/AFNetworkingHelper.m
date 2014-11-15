@@ -117,7 +117,7 @@
 {
     NSUInteger iconnectHash = [strUrl hash];
     
-#ifdef kAFWVersion20
+#ifndef kAFWUseOldVersion
     
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:dicParamenters error:nil];
     
@@ -208,7 +208,7 @@
 {
     NSUInteger iconnectHash = [strUrl hash];
     
-#ifdef kAFWVersion20
+#ifndef kAFWUseOldVersion
     
 #warning -- need test
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:strUrl parameters:nil error:nil];
