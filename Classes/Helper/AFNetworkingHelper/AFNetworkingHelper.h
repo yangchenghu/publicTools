@@ -125,8 +125,7 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
  * @param fail 发送失败的回调block
  * @return
  */
-- (NSUInteger)getRootURL:(NSString *)strRoot toPath:(NSString *)strPath userInfo:(NSDictionary *)dicUserInfo
-      successBlock:(successBlock)success failBlock:(failBlock)fail;
+- (NSUInteger)getRootURL:(NSString *)strRoot toPath:(NSString *)strPath userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail;
 
 /**
  * @description 通过GET的方法请求数据
@@ -136,8 +135,7 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
  * @param fail 发送失败的回调block
  * @return
  */
-- (NSUInteger)getURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo
-        successBlock:(successBlock)success failBlock:(failBlock)fail;
+- (NSUInteger)getURL:(NSString *)strUrl parameters:(NSDictionary *)dicParas userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail;
 
 /**
  * @description 同步访问URL

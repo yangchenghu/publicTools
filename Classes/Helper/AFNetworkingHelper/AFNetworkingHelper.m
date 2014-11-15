@@ -190,28 +190,24 @@
     return [self postData:dicParamenters toRootURL:strRoot toPath:strPath cookies:nil userInfo:dicUserInfo successBlock:success failBlock:fail];
 }
 
-- (NSUInteger)getRootURL:(NSString *)strRoot toPath:(NSString *)strPath userInfo:(NSDictionary *)dicUserInfo
-      successBlock:(successBlock)success failBlock:(failBlock)fail
+- (NSUInteger)getRootURL:(NSString *)strRoot toPath:(NSString *)strPath userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail
 {
     NSString * strUrl = [strRoot stringByAppendingString:strPath];
-    return [self getURL:strUrl userInfo:dicUserInfo successBlock:success failBlock:fail];
+    return [self getURL:strUrl parameters:nil userInfo:dicUserInfo successBlock:success failBlock:fail];
 }
 
-- (NSUInteger)postData:(NSDictionary *)dicParamenters toURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo  successBlock:(successBlock)success failBlock:(failBlock)fail
+- (NSUInteger)postData:(NSDictionary *)dicParamenters toURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail
 {
     return [self postData:dicParamenters toURL:strUrl cookies:nil userAgent:nil userInfo:dicUserInfo successBlock:success failBlock:fail];
 }
 
-
-- (NSUInteger)getURL:(NSString *)strUrl userInfo:(NSDictionary *)dicUserInfo
-            successBlock:(successBlock)success failBlock:(failBlock)fail
+- (NSUInteger)getURL:(NSString *)strUrl parameters:(NSDictionary *)dicParas userInfo:(NSDictionary *)dicUserInfo successBlock:(successBlock)success failBlock:(failBlock)fail
 {
     NSUInteger iconnectHash = [strUrl hash];
     
 #ifndef kAFWUseOldVersion
     
-#warning -- need test
-    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:strUrl parameters:nil error:nil];
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:strUrl parameters:dicParas error:nil];
 #else
     
     NSURL *url = [NSURL URLWithString:strUrl];
