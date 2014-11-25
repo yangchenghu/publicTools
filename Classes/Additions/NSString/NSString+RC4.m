@@ -118,7 +118,7 @@
         return @"";
     }
     
-    NSString * strContent = [result substringToIndex:18];
+    NSString * strContent = [result substringFromIndex:18];
     
     NSString * strTemp = [NSString stringWithFormat:@"%@%@%@", strContent, strKey, strExpire];
     strTemp = [strTemp getMd5_32Bit_String];
