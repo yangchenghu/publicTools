@@ -7,7 +7,7 @@
 //
 
 
-#import "iConsole.h"
+//#import "iConsole.h"
 
 
 //__IPHONE_OS_VERSION_MIN_REQUIRED
@@ -53,6 +53,8 @@
 #define kFileManeger            [NSFileManager defaultManager]
 #define kApplication            [UIApplication sharedApplication]
 #define kMainBundle             [NSBundle mainBundle]
+
+#define kSystemVersion          [[UIDevice currentDevice].systemVersion doubleValue]
 
 
 #define IsEmpty(thing)  (thing == nil\
