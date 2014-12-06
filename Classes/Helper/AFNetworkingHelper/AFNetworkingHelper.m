@@ -157,6 +157,8 @@
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
+    operation.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    
     [operation setWillSendRequestForAuthenticationChallengeBlock:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
         if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
         {
@@ -227,6 +229,8 @@
     NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:strPath parameters:nil];
 #endif
     
+    
+    
 //    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
 //        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
 //    }
@@ -237,6 +241,8 @@
     }];
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    operation.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
     
     [operation setWillSendRequestForAuthenticationChallengeBlock:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
         if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
