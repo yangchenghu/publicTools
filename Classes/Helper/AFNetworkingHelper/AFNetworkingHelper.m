@@ -145,9 +145,15 @@
         [request setValue:strUserAgent forHTTPHeaderField:@"User-Agent"];
     }
     
-    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
-        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
-    }
+//    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
+//        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
+//    }
+    
+    [_mDicHTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
+        if (![request valueForHTTPHeaderField:field]) {
+            [request setValue:value forHTTPHeaderField:field];
+        }
+    }];
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
@@ -221,9 +227,14 @@
     NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:strPath parameters:nil];
 #endif
     
-    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
-        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
-    }
+//    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
+//        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
+//    }
+    [_mDicHTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
+        if (![request valueForHTTPHeaderField:field]) {
+            [request setValue:value forHTTPHeaderField:field];
+        }
+    }];
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
@@ -238,7 +249,6 @@
         [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
     }];
 
-    
     if (dicUserInfo)
     {
         NSMutableDictionary * mDicUserInfo = [dicUserInfo mutableCopy];
