@@ -123,11 +123,33 @@
 
 - (BOOL)dealWithCharatersString:(NSString *)strCharacters
 {
-    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:strCharacters] invertedSet];
-    NSString *filtered = [[self componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
-    BOOL basicTest = [self isEqualToString:filtered];
+    return [self dealWithCharatersString:strCharacters exclude:@""];
+}
 
-    return basicTest;
+- (BOOL)dealWithCharatersString:(NSString *)strCharacters exclude:(NSString *)strExclude
+{
+    if (0 == self.length) {
+        return YES;
+    }
+    
+    NSCharacterSet *bcs = [NSCharacterSet characterSetWithCharactersInString:strCharacters];
+    
+    if (0 < strExclude.length) {
+        NSMutableCharacterSet * mcs = [bcs mutableCopy];
+        [mcs removeCharactersInString:strExclude];
+        bcs = [mcs copy];
+    }
+    
+//    NSCharacterSet * cs = [bcs invertedSet];
+    
+//    NSString *filtered = [[self componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
+//    BOOL basicTest = [self isEqualToString:filtered];
+//    return basicTest;
+
+    NSRange urgentRange = [self rangeOfCharacterFromSet:bcs];
+    BOOL bResult = (urgentRange.location != NSNotFound);
+    
+    return bResult;
 }
 
 - (BOOL)isAllNumberCharacters
@@ -145,6 +167,16 @@
     return [self dealWithCharatersString:@"0123456789_qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM@.\n"];
 }
 
+- (BOOL)isIncludeSpecialCharact
+{
+   return [self isIncludeSpecialCharactExclude:@""];
+}
+
+
+- (BOOL)isIncludeSpecialCharactExclude:(NSString *)strOut
+{
+    return [self dealWithCharatersString:@"<>《》()[]{}【】^/￡\\¤|§¨「」『』￠￢￣~@#￥%\"'&*（）——+|《》$_=€£" exclude:strOut];
+}
 
 
 @end

@@ -53,5 +53,19 @@
  */
 - (BOOL)isEmailCharacters;
 
+/**
+ * @description 判断是否有特殊字符（最好使用单个字符来判断）
+ * @param
+ * @return
+ */
+- (BOOL)isIncludeSpecialCharact;
+
+/**
+ * @description 判断特殊字符，排除选项
+ * @param
+ * @return
+ */
+- (BOOL)isIncludeSpecialCharactExclude:(NSString *)strOut;
+
 
 @end
