@@ -175,7 +175,7 @@
 
 - (BOOL)isIncludeSpecialCharactExclude:(NSString *)strOut
 {
-    return [self dealWithCharatersString:@"<>《》()[]{}【】^/￡\\¤|§¨「」『』￠￢￣~@#￥%\"'&*（）——+|《》$_=€£" exclude:strOut];
+    return [self dealWithCharatersString:@"<>《》()[]{}【】^/￡\\¤|§¨「」『』￠￢￣~@#¥￥%•\"'&*（）——+|《》$_=€£" exclude:strOut];
 }
 
 
