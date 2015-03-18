@@ -60,9 +60,22 @@
     }
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+    
+    
+#warning -- test code
+    {
+        AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
 
+        securityPolicy.validatesDomainName = YES;
+
+        securityPolicy.validatesCertificateChain = NO;
+        
+        [AFHTTPRequestOperationManager manager].securityPolicy = securityPolicy;
+    }
+    
     return self;
 }
+
 
 - (void)getImageFromURL:(NSString *)strURL
               imageView:(UIImageView *)imageView
@@ -155,19 +168,64 @@
         }
     }];
     
+    if (nil != _strAttachUA) {
+        NSString * strUA = [request valueForHTTPHeaderField:@"User-Agent"];
+        strUA = [NSString stringWithFormat:@"%@_%@", strUA, _strAttachUA];
+        [request setValue:strUA forHTTPHeaderField:@"User-Agent"];
+    }
+    
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
-    operation.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+//    operation.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
     
     [operation setWillSendRequestForAuthenticationChallengeBlock:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
-        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-        {
-            {
-                [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+//        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+//        {
+//            {
+//                [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+//            }
+//        }
+//        
+//        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        
+        SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
+        SecCertificateRef certificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
+        NSData *remoteCertificateData = CFBridgingRelease(SecCertificateCopyData(certificate));
+//        NSLog(@"Remote Certificate Data Length: %ld",[remoteCertificateData length]);
+//        NSString * strPath = [NSString stringWithFormat:@"%@/cer.cer", DOCUMENTS_PATH];
+//        [remoteCertificateData writeToFile:strPath atomically:YES];
+        
+        if (nil != _sslCertificateData) {
+            if ([remoteCertificateData isEqual:_sslCertificateData]) {
+                NSURLCredential *cred = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+                [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+            }
+            else{
+                //5)验证失败，取消这次验证流程
+                [challenge.sender cancelAuthenticationChallenge:challenge];
             }
         }
-        
-        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        else{
+            //1)获取trust object
+            SecTrustRef trust = challenge.protectionSpace.serverTrust;
+            SecTrustResultType result;
+            
+            //2)SecTrustEvaluate对trust进行验证
+            OSStatus status = SecTrustEvaluate(trust, &result);
+            if (status == errSecSuccess &&
+                (result == kSecTrustResultProceed ||
+                 result == kSecTrustResultUnspecified)) {
+                    
+                    //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
+                    NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+                    [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+                    
+                } else {
+                    
+                    //5)验证失败，取消这次验证流程
+                    [challenge.sender cancelAuthenticationChallenge:challenge];
+                }
+        }
     }];
     
     if (dicUserInfo)
@@ -229,30 +287,70 @@
     NSMutableURLRequest *request = [httpClient requestWithMethod:@"GET" path:strPath parameters:nil];
 #endif
     
-    
-    
-//    for (NSString * strKey in [_mDicHTTPRequestHeaders allKeys]) {
-//        [request setValue:_mDicHTTPRequestHeaders[strKey] forHTTPHeaderField:strKey];
-//    }
     [_mDicHTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
         if (![request valueForHTTPHeaderField:field]) {
             [request setValue:value forHTTPHeaderField:field];
         }
     }];
     
+    if (nil != _strAttachUA) {
+        NSString * strUA = [request valueForHTTPHeaderField:@"User-Agent"];
+        strUA = [NSString stringWithFormat:@"%@_%@", strUA, _strAttachUA];
+        [request setValue:strUA forHTTPHeaderField:@"User-Agent"];
+    }
+    
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
-    operation.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+//    operation.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
     
     [operation setWillSendRequestForAuthenticationChallengeBlock:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
-        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-        {
-            {
-                [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+//        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+//        {
+//            {
+//                [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+//            }
+//        }
+//        
+//        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        
+        SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
+        SecCertificateRef certificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
+        NSData *remoteCertificateData = CFBridgingRelease(SecCertificateCopyData(certificate));
+        //        NSLog(@"Remote Certificate Data Length: %ld",[remoteCertificateData length]);
+        //        NSString * strPath = [NSString stringWithFormat:@"%@/cer.cer", DOCUMENTS_PATH];
+        //        [remoteCertificateData writeToFile:strPath atomically:YES];
+        
+        if (nil != _sslCertificateData) {
+            if ([remoteCertificateData isEqual:_sslCertificateData]) {
+                NSURLCredential *cred = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+                [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+            }
+            else{
+                //5)验证失败，取消这次验证流程
+                [challenge.sender cancelAuthenticationChallenge:challenge];
             }
         }
-        
-        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        else{
+            //1)获取trust object
+            SecTrustRef trust = challenge.protectionSpace.serverTrust;
+            SecTrustResultType result;
+            
+            //2)SecTrustEvaluate对trust进行验证
+            OSStatus status = SecTrustEvaluate(trust, &result);
+            if (status == errSecSuccess &&
+                (result == kSecTrustResultProceed ||
+                 result == kSecTrustResultUnspecified)) {
+                    
+                    //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
+                    NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+                    [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+                    
+                } else {
+                    
+                    //5)验证失败，取消这次验证流程
+                    [challenge.sender cancelAuthenticationChallenge:challenge];
+                }
+        }
     }];
 
     if (dicUserInfo)

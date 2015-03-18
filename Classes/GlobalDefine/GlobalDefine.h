@@ -6,10 +6,6 @@
 //  Copyright (c) 2013年  All rights reserved.
 //
 
-
-//#import "iConsole.h"
-
-
 //__IPHONE_OS_VERSION_MIN_REQUIRED
 //最小支持的系统版本号
 
@@ -89,7 +85,7 @@
 
 #ifdef DEBUG
 
-#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);//[iConsole log:fmt, ##__VA_ARGS__]
+#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #define DELog(fmt, ...) fprintf(stderr,"%s:%d\t%s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])
 
 #define debug_pwd           printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__)
@@ -104,7 +100,7 @@
 
 #ifdef SHOW_DEBUG
 
-#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);[iConsole log:fmt, ##__VA_ARGS__]
+#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #define DELog(fmt, ...) nil
 
 #define debug_pwd           printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__)
@@ -143,7 +139,7 @@
 #define kColorRGBA(R, G, B, A) [UIColor colorWithRed:(R / 255.0f) green:(G / 255.0f) blue:(B / 255.0f) alpha:A]
 
 //rgb颜色转换（16进制->10进制）
-#define kUIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#define kColorFromHex(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 
 //iOS Device info
@@ -335,6 +331,8 @@ _Pragma("clang diagnostic pop") \
 #define ITTDINFO(xx, ...)  ((void)0)
 
 #endif
+
+
 
 
 

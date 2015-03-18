@@ -25,8 +25,14 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
     
 }
 
+//接收到的数据
 @property (nonatomic, strong) NSMutableData * receivedData;
+//添加到头部的字典
 @property (nonatomic, strong) NSMutableDictionary * mDicHTTPRequestHeaders;
+//在UA后面附加的字段
+@property (nonatomic, strong) NSString * strAttachUA;
+//ssl证书文件
+@property (nonatomic, strong) NSData * sslCertificateData;
 
 /**
  * @description 监测网络连接状态
