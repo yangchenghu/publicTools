@@ -34,6 +34,9 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
 //ssl证书文件
 @property (nonatomic, strong) NSData * sslCertificateData;
 
+@property (nonatomic, strong) NSData * sslCACertificatieData;
+@property (nonatomic, strong) NSArray * sslCACertificatieDatas;
+
 /**
  * @description 监测网络连接状态
  * @param

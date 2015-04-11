@@ -54,7 +54,7 @@
     if (self)
     {
         _netOperationQueue = [[NSOperationQueue alloc] init];
-        _netOperationQueue.maxConcurrentOperationCount = 3;
+        _netOperationQueue.maxConcurrentOperationCount = 5;
         
         _mDicHTTPRequestHeaders = [NSMutableDictionary dictionary];
     }
@@ -62,16 +62,16 @@
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
     
     
-#warning -- test code
-    {
-        AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
-
-        securityPolicy.validatesDomainName = YES;
-
-        securityPolicy.validatesCertificateChain = NO;
-        
-        [AFHTTPRequestOperationManager manager].securityPolicy = securityPolicy;
-    }
+//#warning -- test code
+//    {
+//        AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+//
+//        securityPolicy.validatesDomainName = YES;
+//
+//        securityPolicy.validatesCertificateChain = NO;
+//        
+//        [AFHTTPRequestOperationManager manager].securityPolicy = securityPolicy;
+//    }
     
     return self;
 }
@@ -216,10 +216,49 @@
                 (result == kSecTrustResultProceed ||
                  result == kSecTrustResultUnspecified)) {
                     
-                    //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
-                    NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
-                    [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
-                    
+                    if (_sslCACertificatieDatas) {
+                        // 根据二进制内容提取证书信息
+//                        SecCertificateRef caRef = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_sslCACertificatieData);
+                        NSMutableArray * arrChain = [NSMutableArray array];
+                        
+                        for (NSData * sslCaData in _sslCACertificatieDatas) {
+                             SecCertificateRef caRef = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)sslCaData);
+                            [arrChain addObject:(__bridge id)(caRef)];
+                        }
+                        
+                        // 形成钥匙链
+//                        NSArray * chain = [NSArray arrayWithObject:(__bridge id)(caRef)];
+                        NSArray * chain = [arrChain copy];
+                        
+                        CFTypeRef caChainArrayRef = CFBridgingRetain(chain);
+                        
+                        // 取出服务器证书
+                        SecTrustRef trust = [[challenge protectionSpace] serverTrust];
+                        
+                        SecTrustResultType trustResult = 0;
+                        // 设置为我们自有的CA证书钥匙连
+                        int err = SecTrustSetAnchorCertificates(trust, caChainArrayRef);
+                        if (err == noErr) {
+                            // 用CA证书验证服务器证书
+                            err = SecTrustEvaluate(trust, &trustResult);
+                        }
+                        // 检查结果
+                        BOOL trusted = (err == noErr) && ((trustResult == kSecTrustResultProceed) || (trustResult == kSecTrustResultUnspecified));
+                        
+                        if (trusted) {
+                            //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
+                            NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+                            [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+                        }
+                        else{
+                            [challenge.sender cancelAuthenticationChallenge:challenge];
+                        }
+                    }
+                    else{
+                        //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
+                        NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+                        [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+                    }
                 } else {
                     
                     //5)验证失败，取消这次验证流程
@@ -316,9 +355,9 @@
         SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
         SecCertificateRef certificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
         NSData *remoteCertificateData = CFBridgingRelease(SecCertificateCopyData(certificate));
-        //        NSLog(@"Remote Certificate Data Length: %ld",[remoteCertificateData length]);
-        //        NSString * strPath = [NSString stringWithFormat:@"%@/cer.cer", DOCUMENTS_PATH];
-        //        [remoteCertificateData writeToFile:strPath atomically:YES];
+//        NSLog(@"Remote Certificate Data Length: %ld",[remoteCertificateData length]);
+//        NSString * strPath = [NSString stringWithFormat:@"%@/cer.cer", DOCUMENTS_PATH];
+//        [remoteCertificateData writeToFile:strPath atomically:YES];
         
         if (nil != _sslCertificateData) {
             if ([remoteCertificateData isEqual:_sslCertificateData]) {
@@ -341,15 +380,56 @@
                 (result == kSecTrustResultProceed ||
                  result == kSecTrustResultUnspecified)) {
                     
-                    //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
-                    NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
-                    [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
                     
-                } else {
-                    
-                    //5)验证失败，取消这次验证流程
-                    [challenge.sender cancelAuthenticationChallenge:challenge];
+                    if (_sslCACertificatieDatas) {
+                        // 根据二进制内容提取证书信息
+//                        SecCertificateRef caRef = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_sslCACertificatieData);
+                        NSMutableArray * arrChain = [NSMutableArray array];
+                        
+                        for (NSData * sslCaData in _sslCACertificatieDatas) {
+                            SecCertificateRef caRef = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)sslCaData);
+                            [arrChain addObject:(__bridge id)(caRef)];
+                        }
+                        
+                        // 形成钥匙链
+//                        NSArray * chain = [NSArray arrayWithObject:(__bridge id)(caRef)];
+                        NSArray * chain = [arrChain copy];
+                        
+                        CFTypeRef caChainArrayRef = CFBridgingRetain(chain);
+                        
+                        // 取出服务器证书
+                        SecTrustRef trust = [[challenge protectionSpace] serverTrust];
+                        
+                        SecTrustResultType trustResult = 0;
+                        // 设置为我们自有的CA证书钥匙连
+                        int err = SecTrustSetAnchorCertificates(trust, caChainArrayRef);
+                        if (err == noErr) {
+                            // 用CA证书验证服务器证书
+                            err = SecTrustEvaluate(trust, &trustResult);
+                        }
+                        // 检查结果
+                        BOOL trusted = (err == noErr) && ((trustResult == kSecTrustResultProceed) || (trustResult == kSecTrustResultUnspecified));
+                        
+                        if (trusted) {
+                            //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
+                            NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+                            [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+                        }
+                        else{
+                            [challenge.sender cancelAuthenticationChallenge:challenge];
+                        }
+                    }
+                    else{
+                        //3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接
+                        NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+                        [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+                    }
                 }
+            else {
+                
+                //5)验证失败，取消这次验证流程
+                [challenge.sender cancelAuthenticationChallenge:challenge];
+            }
         }
     }];
 
