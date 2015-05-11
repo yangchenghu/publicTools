@@ -33,9 +33,13 @@ typedef void (^downloadProgressBlock)(NSUInteger bytesRead, long long totalBytes
 @property (nonatomic, strong) NSString * strAttachUA;
 //ssl证书文件
 @property (nonatomic, strong) NSData * sslCertificateData;
-
+//ssl证书的ca证书文件
 @property (nonatomic, strong) NSData * sslCACertificatieData;
+//一组ssl证书的ca证书文件
 @property (nonatomic, strong) NSArray * sslCACertificatieDatas;
+//Basic Authentication(keys:username,password)
+@property (nonatomic, strong) NSDictionary * dicBasicAuthentication;
+
 
 /**
  * @description 监测网络连接状态

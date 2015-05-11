@@ -130,9 +130,19 @@
 {
     NSUInteger iconnectHash = [strUrl hash];
     
+    //新版afnetworking 2.0
 #ifndef kAFWUseOldVersion
     
-    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:strUrl parameters:dicParamenters error:nil];
+    AFHTTPRequestSerializer * httpRequestSerializer = [AFHTTPRequestSerializer serializer];
+    
+    if (nil != _dicBasicAuthentication) {
+        NSString * strUserName = _dicBasicAuthentication[@"username"];
+        NSString * strPassword = _dicBasicAuthentication[@"password"];
+        if (nil != strUserName && nil != strPassword) {
+            [httpRequestSerializer setAuthorizationHeaderFieldWithUsername:strUserName password:strPassword];
+        }
+    }
+    NSMutableURLRequest *request = [httpRequestSerializer requestWithMethod:@"POST" URLString:strUrl parameters:dicParamenters error:nil];
     
 #else
     NSURL * url = [NSURL URLWithString:strUrl];
@@ -310,9 +320,20 @@
 {
     NSUInteger iconnectHash = [strUrl hash];
     
+//新版afnetworking 2.0
 #ifndef kAFWUseOldVersion
     
-    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:strUrl parameters:dicParas error:nil];
+    AFHTTPRequestSerializer * httpRequestSerializer = [AFHTTPRequestSerializer serializer];
+    
+    if (nil != _dicBasicAuthentication) {
+        NSString * strUserName = _dicBasicAuthentication[@"username"];
+        NSString * strPassword = _dicBasicAuthentication[@"password"];
+        if (nil != strUserName && nil != strPassword) {
+            [httpRequestSerializer setAuthorizationHeaderFieldWithUsername:strUserName password:strPassword];
+        }
+    }
+    
+    NSMutableURLRequest *request = [httpRequestSerializer requestWithMethod:@"GET" URLString:strUrl parameters:dicParas error:nil];
 #else
     
     NSURL *url = [NSURL URLWithString:strUrl];
