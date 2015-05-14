@@ -100,7 +100,11 @@
 
 #ifdef SHOW_DEBUG
 
+//<<<<<<< .mine
+//#define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);//[iConsole log:fmt, ##__VA_ARGS__]
+//=======
 #define DLog(fmt, ...)  NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+//>>>>>>> .r40
 #define DELog(fmt, ...) nil
 
 #define debug_pwd           printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__)
@@ -132,6 +136,7 @@
 //change type
 #define kBool2String(x) ( x ? @"YES" : @"NO" )
 
+#define IOS_IS_7_LATER (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_7_0)
 
 //color
 #define kColorSameRGB(x) kColorRGB(x, x, x)
@@ -176,6 +181,7 @@ _Pragma("clang diagnostic pop") \
 
 //string
 #define kUTF8String(string) [string stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+
 
 
 //math
