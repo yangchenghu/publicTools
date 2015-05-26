@@ -41,6 +41,7 @@
 #endif
 
 
+#define IS_IOS7_LATER (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_7_0)
 
 //used
 #define kAppDelegate  ((AppDelegate *)[UIApplication sharedApplication].delegate)
@@ -177,7 +178,13 @@ _Pragma("clang diagnostic pop") \
 
 #define kViewChangeXFromFrame(view, x) [view setFrame:CGRectMake((x), view.frame.origin.y, CGRectGetWidth(view.frame), CGRectGetHeight(view.frame))]
 
-#define kViewChangeYFromFrame(view, y) [view setFrame:CGRectMake(view.frame.origin.y, (y), CGRectGetWidth(view.frame), CGRectGetHeight(view.frame))]
+#define kViewChangeYFromFrame(view, y) [view setFrame:CGRectMake(view.frame.origin.x, (y), CGRectGetWidth(view.frame), CGRectGetHeight(view.frame))]
+
+#define kViewChangeSizeFromFrame(view, size) [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, size.width, size.height)]
+
+#define kViewChangeSizeWidthFromFrame(view, width) [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, width, CGRectGetHeight(view.frame))]
+
+#define kViewChangeSizeHeightFromFrame(view, height) [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, CGRectGetWidth(view.frame), height)]
 
 //string
 #define kUTF8String(string) [string stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
